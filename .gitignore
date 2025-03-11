@@ -1,0 +1,14 @@
+# venvs
+.venv/
+.env/
+
+# env files
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# cache
+__pycache__/
+.pytest_cache/
