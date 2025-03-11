@@ -1,0 +1,10 @@
+services:
+  app:
+    container_name: lru_cache_app
+    build: .
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - ${HOST_LOGS_PATH}:/${APP_LOGS_PATH}
