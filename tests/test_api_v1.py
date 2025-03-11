@@ -60,7 +60,7 @@ def test_put_and_get(clear_cache, client: TestClient):
     assert response.status_code == HTTPStatus.OK
 
     body = response.json()
-    assert body == "test_value"
+    assert body == {"value": "test_value"}
 
 
 def test_update_existing_item(clear_cache, client: TestClient):
@@ -72,7 +72,7 @@ def test_update_existing_item(clear_cache, client: TestClient):
     assert response.status_code == HTTPStatus.OK
 
     body = response.json()
-    assert body == "test_value2"
+    assert body == {"value": "test_value2"}
 
 
 def test_get_missing_item(clear_cache, client: TestClient):

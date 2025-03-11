@@ -4,8 +4,12 @@ from http import HTTPStatus
 from cache import CacheStats, LRUCacheWithTTL
 from dependencies import get_lru_cache
 from fastapi import APIRouter, Depends
-from models import CacheStatsResponseSchema, ErrorResponseSchema, PutCacheItemSchema
-from starlette.responses import JSONResponse, Response
+from models import (
+    CacheStatsResponseSchema,
+    ErrorResponseSchema,
+    ItemValueSchema,
+    PutCacheItemSchema,
+)
 from utils import make_response
 
 router = APIRouter(
@@ -25,6 +29,7 @@ async def get_stats(lru_cache: t.Annotated[LRUCacheWithTTL, Depends(get_lru_cach
 
 @router.get(
     "/{key}",
+    response_model=ItemValueSchema,
     responses={
         HTTPStatus.NOT_FOUND: {"model": ErrorResponseSchema, "description": "Cache item not found or expired"}
     },
@@ -32,7 +37,7 @@ async def get_stats(lru_cache: t.Annotated[LRUCacheWithTTL, Depends(get_lru_cach
 )
 async def get_item(key: str, lru_cache: t.Annotated[LRUCacheWithTTL, Depends(get_lru_cache)]):
     item, op_result = lru_cache.get(key)
-    return make_response(op_result, item)
+    return make_response(op_result, {"value": item})
 
 
 @router.put(
