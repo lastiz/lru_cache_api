@@ -43,7 +43,6 @@ def clear_cache(client: TestClient):
 
 
 def test_get_empty_stats(clear_cache, client: TestClient):
-    """Тест получения статистики кеша."""
     response = client.get("/cache/stats")
     assert response.status_code == HTTPStatus.OK
 
@@ -164,6 +163,12 @@ def test_cache_stats(clear_cache, client: TestClient):
 
 def test_validate_ttl(clear_cache, client: TestClient):
     response = client.put("/cache/key1", json={"value": "test_value", "ttl": -1})
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT
+
+    response = client.get("/cache/key1")
+    assert response.status_code == HTTPStatus.NOT_FOUND
+
+    response = client.put("/cache/key1", json={"value": "test_value", "ttl": 0})
     assert response.status_code == HTTPStatus.UNPROCESSABLE_CONTENT
 
     response = client.get("/cache/key1")
