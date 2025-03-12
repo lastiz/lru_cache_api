@@ -76,7 +76,7 @@ class LRUCacheWithTTL:
             if key in self._cache:
                 operation_result = CacheOperationResult.UPDATED
 
-            if len(self._cache) >= self._capacity:
+            if len(self._cache) >= self._capacity and operation_result == CacheOperationResult.CREATED:
                 self._cache.popitem(last=False)
 
             saved_at = time.time()
