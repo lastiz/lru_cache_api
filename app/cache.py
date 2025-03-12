@@ -79,6 +79,9 @@ class LRUCacheWithTTL:
             if len(self._cache) >= self._capacity and operation_result == CacheOperationResult.CREATED:
                 self._cache.popitem(last=False)
 
+            if operation_result == CacheOperationResult.UPDATED:
+                self._cache.move_to_end(key)
+
             saved_at = time.time()
             self._cache[key] = CachedItem(val, saved_at, ttl)
             return operation_result
