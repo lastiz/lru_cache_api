@@ -32,6 +32,24 @@ def test_update_existing_key(cache: LRUCacheWithTTL):
     assert cache.get("a") == (2, CacheOperationResult.HIT)
 
 
+def test_update_existing_key_move_to_end(cache: LRUCacheWithTTL):
+    cache.put("a", 1)
+    cache.put("b", 2)
+    cache.put("c", 3)
+    cache.put("a", 4)
+
+    assert cache.get("a") == (4, CacheOperationResult.HIT)
+    assert cache.stats.items == ("a", "c", "b")
+
+
+def test_update_existing_key_saves_size(cache: LRUCacheWithTTL):
+    cache.put("a", 1)
+    cache.put("b", 2)
+    cache.put("c", 3)
+    cache.put("a", 4)
+
+    assert cache.stats.size == 3
+
 def test_get_missing_key(cache: LRUCacheWithTTL):
     assert cache.get("missing") == (None, CacheOperationResult.MISS)
 

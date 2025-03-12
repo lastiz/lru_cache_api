@@ -75,6 +75,17 @@ def test_update_existing_item(clear_cache, client: TestClient):
     assert body == {"value": "test_value2"}
 
 
+def test_update_existing_item_saves_size(clear_cache, client: TestClient):
+    client.put("/cache/key1", json={"value": "test_value"})
+    client.put("/cache/key2", json={"value": "test_value", "ttl": 30})
+    client.put("/cache/key3", json={"value": "test_value", "ttl": 30})
+    client.put("/cache/key1", json={"value": "test_value", "ttl": 30})
+
+    response = client.get("/cache/stats")
+    body = response.json()
+
+    assert body["size"] == 3
+
 def test_get_missing_item(clear_cache, client: TestClient):
     response = client.get("/cache/missing_key")
     assert response.status_code == HTTPStatus.NOT_FOUND
